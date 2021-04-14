@@ -8,6 +8,8 @@ public class PowerUpsEffects : MonoBehaviour
     private GameObject player;
     private BoxCollider2D playerTemp;
     private ShipControl shipControl;
+    private GameObject playerPivot;
+    private GameObject fireOrb;
 
     private DropStuff dropStuff;
 
@@ -22,15 +24,21 @@ public class PowerUpsEffects : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         playerTemp = GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider2D>();
         shipControl = GameObject.FindGameObjectWithTag("Player").GetComponent<ShipControl>();
+        playerPivot = GameObject.FindGameObjectWithTag("Player").transform.FindChild("Pivot").gameObject;
+        fireOrb = GameObject.FindGameObjectWithTag("Player").transform.FindChild("Pivot").transform.FindChild("Sphere").gameObject;
+        //fireOrb = GameObject.Find("PowerUps").transform.FindChild("PUFireRate").transform.FindChild("Sphere").gameObject;
+        //fireOrb = Resources.Load("Sphere") as GameObject;
+        //fireOrb = GameObject.Find("Sphere");
         dropStuff = GameObject.Find("PowerUps").GetComponent<DropStuff>();
 
     }
     void Start()
     {
         //timer = 0;
-        PUFireRateEnabled = false;
-        PUInvincibilityEnabled = false;
-        PUCloneEnabled = false;
+
+        //PUFireRateEnabled = false;
+        //PUInvincibilityEnabled = false;
+        //PUCloneEnabled = false;
     }
 
     void OnBecameInvisible()
@@ -48,7 +56,10 @@ public class PowerUpsEffects : MonoBehaviour
             {
                 case "PUFireRate(Clone)":
                     ShipControl.fireCooldown = ShipControl.fireCooldown / 2;
-                    PUFireRateEnabled = true;
+                    PUFireRateEnabled = true; 
+                    GameObject FireOrb = Instantiate(fireOrb, new Vector3(playerPivot.transform.position.x, playerPivot.transform.position.y + 0.7f, 0), playerPivot.transform.rotation);
+                    FireOrb.transform.parent = player.transform.FindChild("Pivot");
+                    FireOrb.SetActive(true);
                     dropStuff.PlaySound(0);
                     break;
                 case "PUInvincibility(Clone)":  
@@ -90,32 +101,7 @@ public class PowerUpsEffects : MonoBehaviour
         }
     }
 
-    //private void CheckPowerUps()
-    //{
-    //    if(PUFireRateEnabled == true)
-    //    {
-    //        PUFireRateEnabled = false;
-    //        ShipControl.fireCooldown = shipControl.FireCooldown;
-    //        Debug.Log("Disabled");
-    //    }
-    //    if (PUInvincibilityEnabled == true)
-    //    {
-    //        PUInvincibilityEnabled = false;
-    //        playerTemp.enabled = true;
-    //        Debug.Log("Disabled");
-    //    }
-    //    if (PUCloneEnabled == true)
-    //    {
-    //        PUCloneEnabled = false;
-    //        foreach (Transform child in player.transform)
-    //        {
-    //            Destroy(child.gameObject);
-    //        }
-    //        Debug.Log("Disabled");
-    //    }
-    //}
-
-    void CheckPowerUps2(float timerTemp)
+    void CheckPowerUps(float timerTemp)
     {
         if (timerTemp <= 0)
         {
@@ -123,6 +109,11 @@ public class PowerUpsEffects : MonoBehaviour
             {
                 PUFireRateEnabled = false;
                 ShipControl.fireCooldown = shipControl.FireCooldown;
+                foreach (Transform child in player.transform.FindChild("Pivot"))
+                {
+                    if (child.gameObject.name.Contains("Clone"))
+                        Destroy(child.gameObject);
+                }
                 Debug.Log("Disabled");
             }
             if (player != null)
@@ -140,6 +131,7 @@ public class PowerUpsEffects : MonoBehaviour
                 PUCloneEnabled = false;
                 foreach (Transform child in player.transform)
                 {
+                    if (child.gameObject.name != "Pivot")
                     Destroy(child.gameObject);
                 }
                 Debug.Log("Disabled");
@@ -162,8 +154,7 @@ public class PowerUpsEffects : MonoBehaviour
        //     timer = 0.0f;
        //     //CheckPowerUps(); //if you have multiple power ups this function called many times// e.g firecooldown/4
        //}
-        CheckPowerUps2(DropStuff.Timer);
-
-        
+        CheckPowerUps(DropStuff.Timer);
+        playerPivot.transform.Rotate(0, 0, 30 * Time.deltaTime);
     }
 }

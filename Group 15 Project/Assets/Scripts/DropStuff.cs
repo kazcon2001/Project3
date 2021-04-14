@@ -38,7 +38,7 @@ public class DropStuff : MonoBehaviour
     void FixedUpdate()
     {
         Timer -= Time.deltaTime;
-        Debug.Log(Timer);
+        //Debug.Log(Timer);
 
         int drop = Random.Range(1, dropChance);
         if (drop <= dropChance/dropChance)

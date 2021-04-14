@@ -47,7 +47,7 @@ public class ShipControl : MonoBehaviour
 
     // Update is called once per frame
     void Update () 
-    {   
+    {
         GameManager.PlayerPaused();
         timer += Time.deltaTime;
 

@@ -56,6 +56,11 @@ public class Laser : MonoBehaviour {
                 Destroy(fire, 1.0f);
             }
 
+            if (other.gameObject.name == "Boss")
+            {
+                EnemyBoss.BossHealth--;
+            }
+            else
             Destroy(other.gameObject);
             Destroy(gameObject);
 

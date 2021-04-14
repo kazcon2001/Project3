@@ -2,12 +2,14 @@
 using UnityEngine.UI;
 //using UnityEngine.SceneManagement;
 using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour {
 
     static private bool isPlayerDead;
     static private bool playerWon;
     static public bool gamePaused;
+    //public GameObject menuScreen;
     public GameObject loseScreen;
     public GameObject wonScreen;
     public GameObject pauseScreen;
@@ -19,12 +21,15 @@ public class GameManager : MonoBehaviour {
     //float timer=0;
     void Awake()
     {
+        //GameTimer = -Time.deltaTime;
+        //Time.timeScale = 0;
         Debug.Assert(instance == null);
         instance = this;
     }
 
 	// Use this for initialization
 	void Start () {
+        
         isPlayerDead = false;
         playerWon = false;
 
@@ -33,11 +38,18 @@ public class GameManager : MonoBehaviour {
         Debug.Assert(wonScreen != null);
         wonScreen.SetActive(false);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        GameTimer += Time.deltaTime;
-        
+    //public void Menu()
+    //{
+    //    Time.timeScale = 1;
+    //    menuScreen.SetActive(false);
+    //    GameTimer = 0;
+    //}
+
+    // Update is called once per frame
+    void Update () {
+
+        //if (menuScreen.activeSelf)
+        //    GameTimer -= Time.deltaTime;
         if (isPlayerDead)
             loseScreen.SetActive(true);
         if (playerWon)
@@ -46,6 +58,9 @@ public class GameManager : MonoBehaviour {
             pauseScreen.SetActive(true);
         else
             pauseScreen.SetActive(false);
+
+        GameTimer += Time.deltaTime;
+        GameTimer = Mathf.Round(GameTimer * 1000f) / 1000f;
 
         GameTimerText.text = "Timer: " + GameTimer;
     }
@@ -87,7 +102,7 @@ public class GameManager : MonoBehaviour {
     {
         Time.timeScale = 1;
         //SceneManager.LoadScene(0);
-        Application.LoadLevel(0);
+        Application.LoadLevel(1);
         GameTimer = 0;
     }
 
