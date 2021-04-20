@@ -6,18 +6,24 @@ public class EnemyBoss : MonoBehaviour
 {
     [SerializeField] private int health;
     public static int BossHealth;
+    public static GameObject BossHealthBar;
+    public static float BossHealthBarScale;
 
-    private void Awake()
+    void Awake()
     {
         BossHealth = health;
+        BossHealthBarScale = 1f / health;
     }
 
-    void FixedUpdate()
+    void Start()
     {
-        Debug.Log(BossHealth);
+        BossHealthBar = GameObject.Find("BossHealth").transform.FindChild("Bar").transform.FindChild("Health").gameObject;
+    }
+
+
+    void Update()
+    {
         if (BossHealth <= 0)
-        {
             Destroy(gameObject);
-        }
     }
 }

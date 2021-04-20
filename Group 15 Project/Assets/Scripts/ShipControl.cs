@@ -5,17 +5,21 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ShipControl : MonoBehaviour 
 {
-    public GameObject shotPrefab;
+    public GameObject shotPrefab;       //Player Projectile
+    public GameObject swordPrefab;      //Player Projectile on PUBossDamage power up;
+
     public float moveSpeed;
     [Tooltip("Invisible barrier that stops the player from going any further in the X-axis")] public float leftLimit, rightLimit;
+
     public int dashCount = 3;
     public static int dashes;
     public float dashDistance;
+
     public float FireCooldown;
     public static float fireCooldown;
-    private float timer = 0;
+    private float timer = 0;            //Fire Cooldown timer not to be mistaken with Game Timer
 
-    private AudioSource audioSource;
+    private AudioSource audioSource;    //Used for Dash
 
     private Rigidbody2D _rb;
 
@@ -27,37 +31,46 @@ public class ShipControl : MonoBehaviour
         Debug.Assert(shotPrefab.GetComponent<Laser>() != null);
     }
 
-	// Use this for initialization
 	void Start () 
     {
         dashes = dashCount;
         fireCooldown = FireCooldown;
 	}
 
-    void FixedUpdate()
+    void FixedUpdate()   //Using FixedUpdate to avoid wacky movement bug
     {
         _rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime, 0);
 
-        if (transform.position.x <= leftLimit && _rb.velocity.x < 0)
-            transform.position = new Vector3(leftLimit, transform.position.y, transform.position.z);
-        else if (transform.position.x >= rightLimit && _rb.velocity.x > 0)
-            transform.position = new Vector3(rightLimit, transform.position.y, transform.position.z);
+        if (transform.position.x <= leftLimit && _rb.velocity.x < 0)                                    //If player tries to go off bounds
+            transform.position = new Vector3(leftLimit, transform.position.y, transform.position.z);    //then this code places the player
+        else if (transform.position.x >= rightLimit && _rb.velocity.x > 0)                              //back inside bounds. Also works
+            transform.position = new Vector3(rightLimit, transform.position.y, transform.position.z);   //with player dashing out
 
     }
 
-    // Update is called once per frame
     void Update () 
     {
         GameManager.PlayerPaused();
+
         timer += Time.deltaTime;
 
+        //Player Shoots Code
         if (!EventSystem.current.IsPointerOverGameObject() && Input.GetButtonDown("Fire1") && GameManager.gamePaused == false && fireCooldown <= timer)
         {
             timer = 0;
-            GameObject shot = Instantiate(shotPrefab, transform.position, Quaternion.identity) as GameObject;
-            Debug.Assert(shot);
+            if (PowerUpsEffects.PUBossDamageEnabled)
+            {
+                GameObject shot = Instantiate(swordPrefab, transform.position, Quaternion.Euler(new Vector3(0, 0, 72))) as GameObject;
+                Debug.Assert(shot);
+            }
+            else
+            {
+                GameObject shot = Instantiate(shotPrefab, transform.position, Quaternion.identity) as GameObject;
+                Debug.Assert(shot);
+            }
         }
 
+        //Player Dash code, only works if player is moving
         if (!EventSystem.current.IsPointerOverGameObject() && Input.GetButtonDown("Dash") && dashes > 0 )
         {
             if (Input.GetAxis("Horizontal") > 0)
@@ -72,8 +85,6 @@ public class ShipControl : MonoBehaviour
                 transform.position = new Vector3(transform.position.x - dashDistance, transform.position.y, transform.position.z);
                 dashes--;
             }
-
-
         }
 	}
 }

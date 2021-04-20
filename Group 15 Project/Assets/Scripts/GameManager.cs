@@ -9,25 +9,24 @@ public class GameManager : MonoBehaviour {
     static private bool isPlayerDead;
     static private bool playerWon;
     static public bool gamePaused;
-    //public GameObject menuScreen;
+
     public GameObject loseScreen;
     public GameObject wonScreen;
     public GameObject pauseScreen;
 
-    public static float GameTimer;
+    public static float GameTimer; //Timer shown on screen
     public Text GameTimerText;
 
     static private GameManager instance = null;
-    //float timer=0;
+
     void Awake()
     {
-        //GameTimer = -Time.deltaTime;
-        //Time.timeScale = 0;
+
         Debug.Assert(instance == null);
         instance = this;
     }
 
-	// Use this for initialization
+	
 	void Start () {
         
         isPlayerDead = false;
@@ -38,18 +37,10 @@ public class GameManager : MonoBehaviour {
         Debug.Assert(wonScreen != null);
         wonScreen.SetActive(false);
 	}
-    //public void Menu()
-    //{
-    //    Time.timeScale = 1;
-    //    menuScreen.SetActive(false);
-    //    GameTimer = 0;
-    //}
 
-    // Update is called once per frame
     void Update () {
 
-        //if (menuScreen.activeSelf)
-        //    GameTimer -= Time.deltaTime;
+        //the following code Sets certain screens depending on player status
         if (isPlayerDead)
             loseScreen.SetActive(true);
         if (playerWon)
@@ -59,9 +50,9 @@ public class GameManager : MonoBehaviour {
         else
             pauseScreen.SetActive(false);
 
-        GameTimer += Time.deltaTime;
-        GameTimer = Mathf.Round(GameTimer * 1000f) / 1000f;
 
+        GameTimer += Time.deltaTime;
+        GameTimer = Mathf.Round(GameTimer * 1000f) / 1000f; //Used to round Timer up to 3 decimal places
         GameTimerText.text = "Timer: " + GameTimer;
     }
 
@@ -79,12 +70,12 @@ public class GameManager : MonoBehaviour {
     public static void PlayerPaused()
     {
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !gamePaused && Time.timeScale != 0)
+        if (Input.GetKeyDown(KeyCode.Escape) && !gamePaused)
         {
             Time.timeScale = 0;
             gamePaused = true;
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused && Time.timeScale == 0)
+        else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused)
         {
             Time.timeScale = 1;
             gamePaused = false;
@@ -101,7 +92,6 @@ public class GameManager : MonoBehaviour {
     public void Restart()
     {
         Time.timeScale = 1;
-        //SceneManager.LoadScene(0);
         Application.LoadLevel(1);
         GameTimer = 0;
     }
