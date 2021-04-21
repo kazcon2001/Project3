@@ -5,31 +5,25 @@ using System.Collections;
 public class EnemyMotion : MonoBehaviour {
 
     [SerializeField] private int speed;
-    [Tooltip ("Invisible barrier that stops enemies from going any further in the X-axis")] [SerializeField] private float xLimit = 4.5f;
-    [Tooltip("offset at end of row transition")]
-    [SerializeField] private Vector2 rowDrop = new Vector2(0.25f,0.5f);
+    [Tooltip ("Stops enemies from going any further in the X-axis")] [SerializeField] private float xLimit = 4.5f;
+    [Tooltip("Offset at end of row transition")] [SerializeField] private Vector2 rowDrop = new Vector2(0.25f,0.5f);
 
-    private Rigidbody2D _rb;
+    private Rigidbody2D _rb;        //used to move the enemy
+    private GameObject player;      //used to kill player
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
         Debug.Assert(_rb);
     }
 
-	// Use this for initialization
-	void Start () 
+    void FixedUpdate ()             //Using FixedUpdate to avoid wacky movement bug
     {
-        
+        _rb.velocity = new Vector2(speed * Time.deltaTime, 0); 
 
-	}
-
-    // Update is called once per frame
-    void FixedUpdate ()
-    {
-        _rb.velocity = new Vector2(speed * Time.deltaTime, 0);
-
-        if (transform.position.x >= xLimit)
+        //The following code decides rowDrop x and y and inverts speed based on the direction of the enemy
+        if (transform.position.x >= xLimit)                      
         {
             transform.position = new Vector2(transform.position.x - rowDrop.x, transform.position.y - rowDrop.y);
             speed = -speed;
@@ -42,6 +36,9 @@ public class EnemyMotion : MonoBehaviour {
             _rb.velocity = new Vector2(speed * Time.deltaTime, 0);
         }
 
+        //If the enemies go below player height, then the player loses
+        if (transform.position.y <= player.transform.position.y)
+            GameManager.PlayerDied();
     }
 
 }

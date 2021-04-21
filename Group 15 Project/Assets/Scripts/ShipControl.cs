@@ -9,7 +9,7 @@ public class ShipControl : MonoBehaviour
     public GameObject swordPrefab;      //Player Projectile on PUBossDamage power up;
 
     public float moveSpeed;
-    [Tooltip("Invisible barrier that stops the player from going any further in the X-axis")] public float leftLimit, rightLimit;
+    [Tooltip("Stops the player from going any further in the X-axis")] public float leftLimit, rightLimit;
 
     public int dashCount = 3;
     public static int dashes;
@@ -19,9 +19,9 @@ public class ShipControl : MonoBehaviour
     public static float fireCooldown;
     private float timer = 0;            //Fire Cooldown timer not to be mistaken with Game Timer
 
-    private AudioSource audioSource;    //Used for Dash
+    private AudioSource audioSource;    //Used for Dash SFX
 
-    private Rigidbody2D _rb;
+    private Rigidbody2D _rb;            //Used to move the player
 
     void Awake()
     {
@@ -54,10 +54,12 @@ public class ShipControl : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        //Player Shoots Code
+        //Player Shoot Code, won't work if cooldown timer is not ready
         if (!EventSystem.current.IsPointerOverGameObject() && Input.GetButtonDown("Fire1") && GameManager.gamePaused == false && fireCooldown <= timer)
         {
             timer = 0;
+
+            //shot changes to sword slash if the player has activated PUBossDamage (rotated so it can have a proper angle)
             if (PowerUpsEffects.PUBossDamageEnabled)
             {
                 GameObject shot = Instantiate(swordPrefab, transform.position, Quaternion.Euler(new Vector3(0, 0, 72))) as GameObject;
@@ -71,6 +73,7 @@ public class ShipControl : MonoBehaviour
         }
 
         //Player Dash code, only works if player is moving
+        //Teleports the player away from his previous spot depending on direction and reduces the amount of dashes
         if (!EventSystem.current.IsPointerOverGameObject() && Input.GetButtonDown("Dash") && dashes > 0 )
         {
             if (Input.GetAxis("Horizontal") > 0)

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-//using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
 
@@ -40,7 +39,7 @@ public class GameManager : MonoBehaviour {
 
     void Update () {
 
-        //the following code Sets certain screens depending on player status
+        //the following code activates certain screens depending on player status
         if (isPlayerDead)
             loseScreen.SetActive(true);
         if (playerWon)
@@ -92,8 +91,8 @@ public class GameManager : MonoBehaviour {
     public void Restart()
     {
         Time.timeScale = 1;
-        Application.LoadLevel(1);
-        GameTimer = 0;
+        Application.LoadLevel(1);       //(1) is the game scene
+        GameTimer = 0;                  //Restart Timer for new playthrough 
     }
 
 }

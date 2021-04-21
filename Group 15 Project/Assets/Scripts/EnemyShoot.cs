@@ -4,13 +4,12 @@ using System.Collections;
 public class EnemyShoot : MonoBehaviour {
 
     public GameObject shotPrefab;
-    [Tooltip("Time between shots in (min, max) (X = min, Y = max)")]public Vector2 timeBetweenShots = new Vector2(0.5f,1.0f);
-    public float speed = 1;
+    [Tooltip("Time between shots in (min, max) (X = min, Y = max)")] public Vector2 timeBetweenShots = new Vector2(0.5f,1.0f);
+    public float speed = 1;                                     //speed multiplier for projectile
 
-    private float nextShot = -1;
-    private bool okToFire = false;
-
-    GameManager gameManager;
+    private float nextShot = -1;                                //nextShot decides time to shoot  
+    private bool okToFire = false;                              //decides enemies ability to shoot depending on their visibility
+                                                                //e.g if enemy is behind the 2D background or dead
 
     void Awake()
     {
@@ -18,14 +17,12 @@ public class EnemyShoot : MonoBehaviour {
         Random.seed = (int)Time.realtimeSinceStartup;
     }
 
-	// Use this for initialization
 	void Start () 
     {
         nextShot = Time.time + Random.Range(timeBetweenShots.x, timeBetweenShots.y);	    
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () 
+	void FixedUpdate ()                                         //Fixed Update to avoid wacky movement bug
     {
 	    if(okToFire && nextShot < Time.time)
         {

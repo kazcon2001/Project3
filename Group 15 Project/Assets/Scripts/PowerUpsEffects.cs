@@ -32,8 +32,8 @@ public class PowerUpsEffects : MonoBehaviour
 
     void OnBecameInvisible()
     {
-       if (name.Contains("(Clone)"))                //Bug where it destroys prefabs with particle 
-                                                    //effects even though they are already off screen
+       if (name.Contains("(Clone)"))                //fixes bug where it destroys referenced prefabs with 
+                                                    //particle effects even though they are already off screen
             Destroy(gameObject);
     }
 
@@ -63,7 +63,7 @@ public class PowerUpsEffects : MonoBehaviour
                     ShipControl.dashes += 2;
                     dropStuff.PlaySound(2);
                     break;
-                case "PUClone(Clone)":              //Instantiates player with disabled colider to a certain distance the varies between which clone, NO MORE THAN 2 CLONES
+                case "PUClone(Clone)":              //Instantiates player with disabled collider to a certain distance the varies between which clone, NO MORE THAN 2 CLONES
                     PUCloneEnabled = true;
                     if (player.transform.childCount != 3)
                     {
@@ -96,6 +96,8 @@ public class PowerUpsEffects : MonoBehaviour
         }
     }
 
+    //The following disables power ups once the timer is finished
+    //By undoing whatever was added or edited to the player
     void CheckPowerUps(float timerTemp)
     {
         if (timerTemp <= 0)
@@ -139,11 +141,11 @@ public class PowerUpsEffects : MonoBehaviour
         }
     }
 
-    void FixedUpdate()      //FixedUpdate to avoid Movement and Timer bugs
+    void FixedUpdate()                              //FixedUpdate to avoid Movement and Timer bugs
     {
 
-        CheckPowerUps(DropStuff.Timer);
-        if (playerPivot)
+        CheckPowerUps(DropStuff.Timer);             
+        if (playerPivot)                            //Used to rotate fireOrb pivot point
         playerPivot.transform.Rotate(0, 0, 30 * Time.deltaTime);
 
     }

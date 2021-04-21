@@ -7,17 +7,18 @@ public class MenuScript : MonoBehaviour
 {
     public void Menu()
     {
-        SceneManager.LoadScene(0);   //Main Menu Scene
+        SceneManager.LoadScene(0);      //Main Menu Scene
     }
     public void PlayGame() 
     {
-        GameManager.gamePaused = false;
-        Time.timeScale = 1;
-        SceneManager.LoadScene(1);  //Game Scene
+        GameManager.gamePaused = false; //fixes bug where if game was paused and player decided to
+        Time.timeScale = 1;             //go to menu, the game would be paused if he played again
+
+        SceneManager.LoadScene(1);      //Game Scene
     }
 
     public void ShowControls()
     {
-        SceneManager.LoadScene(2);  //Controls Scene
+        SceneManager.LoadScene(2);      //Controls Scene
     }
 }

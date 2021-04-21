@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EnemyBoss : MonoBehaviour
 {
-    [SerializeField] private int health;
+    [SerializeField] private int health;        
     public static int BossHealth;
-    public static GameObject BossHealthBar;
-    public static float BossHealthBarScale;
+    public static GameObject BossHealthBar;     //Boss Health Bar
+    public static float BossHealthBarScale;     //how much the reduction per hit
 
     void Awake()
     {
@@ -19,7 +19,6 @@ public class EnemyBoss : MonoBehaviour
     {
         BossHealthBar = GameObject.Find("BossHealth").transform.FindChild("Bar").transform.FindChild("Health").gameObject;
     }
-
 
     void Update()
     {
